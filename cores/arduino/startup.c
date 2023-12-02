@@ -56,58 +56,58 @@ void SystemInit( void )
 
 //***************** SAMD51 ************************//
 #if defined(__SAMD51__)
-  NVMCTRL->CTRLA.reg |= NVMCTRL_CTRLA_RWS(0);
+  //  NVMCTRL->CTRLA.reg |= NVMCTRL_CTRLA_RWS(0);
   
   #ifndef CRYSTALLESS
   /* ----------------------------------------------------------------------------------------------
    * 1) Enable XOSC32K clock (External on-board 32.768Hz oscillator)
    */
   
-  OSC32KCTRL->XOSC32K.reg = OSC32KCTRL_XOSC32K_ENABLE | OSC32KCTRL_XOSC32K_EN32K | OSC32KCTRL_XOSC32K_EN32K | OSC32KCTRL_XOSC32K_CGM_XT | OSC32KCTRL_XOSC32K_XTALEN;
+  //  OSC32KCTRL->XOSC32K.reg = OSC32KCTRL_XOSC32K_ENABLE | OSC32KCTRL_XOSC32K_EN32K | OSC32KCTRL_XOSC32K_CGM_XT | OSC32KCTRL_XOSC32K_XTALEN;
   
-  while( (OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_XOSC32KRDY) == 0 ){
+  //  while( (OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_XOSC32KRDY) == 0 ){
     /* Wait for oscillator to be ready */
-  }
+  // }
 
   #endif //CRYSTALLESS
 
   //software reset
 	
-  GCLK->CTRLA.bit.SWRST = 1;
-  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_SWRST ){
-	  /* wait for reset to complete */
-  }
+  //  GCLK->CTRLA.bit.SWRST = 1;
+  //  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_SWRST ){
+	 //   /* wait for reset to complete */
+  //  }
 
   #ifndef CRYSTALLESS  
   /* ----------------------------------------------------------------------------------------------
    * 2) Put XOSC32K as source of Generic Clock Generator 3
    */
-  GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_XOSC32K].reg = GCLK_GENCTRL_SRC(GCLK_GENCTRL_SRC_XOSC32K) | //generic clock gen 3
-    GCLK_GENCTRL_GENEN;
+  // GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_XOSC32K].reg = GCLK_GENCTRL_SRC(GCLK_GENCTRL_SRC_XOSC32K) | //generic clock gen 3
+  //   GCLK_GENCTRL_GENEN;
   #else
   /* ----------------------------------------------------------------------------------------------
    * 2) Put OSCULP32K as source of Generic Clock Generator 3
    */
-  GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_XOSC32K].reg = GCLK_GENCTRL_SRC(GCLK_GENCTRL_SRC_OSCULP32K) | GCLK_GENCTRL_GENEN; //generic clock gen 3
+  //  GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_XOSC32K].reg = GCLK_GENCTRL_SRC(GCLK_GENCTRL_SRC_OSCULP32K) | GCLK_GENCTRL_GENEN; //generic clock gen 3
   #endif
   
 
-  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL3 ){
-    /* Wait for synchronization */
-  }
+  //  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL3 ){
+  //    /* Wait for synchronization */
+  //  }
   
   /* ----------------------------------------------------------------------------------------------
    * 3) Put OSCULP32K as source for Generic Clock Generator 0
    */
-  GCLK->GENCTRL[0].reg = GCLK_GENCTRL_SRC(GCLK_GENCTRL_SRC_OSCULP32K) | GCLK_GENCTRL_GENEN;
+  //  GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_MAIN].reg = GCLK_GENCTRL_SRC(GCLK_GENCTRL_SRC_XOSC32K) | GCLK_GENCTRL_GENEN;
   
   /* ----------------------------------------------------------------------------------------------
    * 4) Enable DFLL48M clock
    */
 
-  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL0 ){
-    /* Wait for synchronization */
-  }
+   //  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL0 ){
+     /* Wait for synchronization */
+   //  }
 
   /* DFLL Configuration in Open Loop mode */
   
@@ -158,33 +158,33 @@ void SystemInit( void )
   */
 	
   //PLL0 is 120MHz
-  GCLK->PCHCTRL[OSCCTRL_GCLK_ID_FDPLL0].reg = (1 << GCLK_PCHCTRL_CHEN_Pos) | GCLK_PCHCTRL_GEN(GCLK_PCHCTRL_GEN_GCLK5_Val);
+  //  GCLK->PCHCTRL[OSCCTRL_GCLK_ID_FDPLL0].reg = (1 << GCLK_PCHCTRL_CHEN_Pos) | GCLK_PCHCTRL_GEN(GCLK_PCHCTRL_GEN_GCLK5_Val);
   
   // This rounds to nearest full-MHz increment; not currently using frac
-  OSCCTRL->Dpll[0].DPLLRATIO.reg = OSCCTRL_DPLLRATIO_LDRFRAC(0x00) | OSCCTRL_DPLLRATIO_LDR((F_CPU - 500000) / 1000000);
+  //  OSCCTRL->Dpll[0].DPLLRATIO.reg = OSCCTRL_DPLLRATIO_LDRFRAC(0x00) | OSCCTRL_DPLLRATIO_LDR((F_CPU - 500000) / 1000000);
   
-  while(OSCCTRL->Dpll[0].DPLLSYNCBUSY.bit.DPLLRATIO);
+  //  while(OSCCTRL->Dpll[0].DPLLSYNCBUSY.bit.DPLLRATIO);
   
   //MUST USE LBYPASS DUE TO BUG IN REV A OF SAMD51
-  OSCCTRL->Dpll[0].DPLLCTRLB.reg = OSCCTRL_DPLLCTRLB_REFCLK_GCLK | OSCCTRL_DPLLCTRLB_LBYPASS;
+  //  OSCCTRL->Dpll[0].DPLLCTRLB.reg = OSCCTRL_DPLLCTRLB_REFCLK_GCLK | OSCCTRL_DPLLCTRLB_LBYPASS;
   
-  OSCCTRL->Dpll[0].DPLLCTRLA.reg = OSCCTRL_DPLLCTRLA_ENABLE;
+  //  OSCCTRL->Dpll[0].DPLLCTRLA.reg = OSCCTRL_DPLLCTRLA_ENABLE;
   
-  while( OSCCTRL->Dpll[0].DPLLSTATUS.bit.CLKRDY == 0 || OSCCTRL->Dpll[0].DPLLSTATUS.bit.LOCK == 0 );
+  //  while( OSCCTRL->Dpll[0].DPLLSTATUS.bit.CLKRDY == 0 || OSCCTRL->Dpll[0].DPLLSTATUS.bit.LOCK == 0 );
   
   //PLL1 is 100MHz
-  GCLK->PCHCTRL[OSCCTRL_GCLK_ID_FDPLL1].reg = (1 << GCLK_PCHCTRL_CHEN_Pos) | GCLK_PCHCTRL_GEN(GCLK_PCHCTRL_GEN_GCLK5_Val);
+  //  GCLK->PCHCTRL[OSCCTRL_GCLK_ID_FDPLL1].reg = (1 << GCLK_PCHCTRL_CHEN_Pos) | GCLK_PCHCTRL_GEN(GCLK_PCHCTRL_GEN_GCLK5_Val);
   
-  OSCCTRL->Dpll[1].DPLLRATIO.reg = OSCCTRL_DPLLRATIO_LDRFRAC(0x00) | OSCCTRL_DPLLRATIO_LDR(99); //100 Mhz
+  //  OSCCTRL->Dpll[1].DPLLRATIO.reg = OSCCTRL_DPLLRATIO_LDRFRAC(0x00) | OSCCTRL_DPLLRATIO_LDR(99); //100 Mhz
   
-  while(OSCCTRL->Dpll[1].DPLLSYNCBUSY.bit.DPLLRATIO);
+  //  while(OSCCTRL->Dpll[1].DPLLSYNCBUSY.bit.DPLLRATIO);
   
   //MUST USE LBYPASS DUE TO BUG IN REV A OF SAMD51
-  OSCCTRL->Dpll[1].DPLLCTRLB.reg = OSCCTRL_DPLLCTRLB_REFCLK_GCLK | OSCCTRL_DPLLCTRLB_LBYPASS;
+  //  OSCCTRL->Dpll[1].DPLLCTRLB.reg = OSCCTRL_DPLLCTRLB_REFCLK_GCLK | OSCCTRL_DPLLCTRLB_LBYPASS;
   
-  OSCCTRL->Dpll[1].DPLLCTRLA.reg = OSCCTRL_DPLLCTRLA_ENABLE;
+  //  OSCCTRL->Dpll[1].DPLLCTRLA.reg = OSCCTRL_DPLLCTRLA_ENABLE;
   
-  while( OSCCTRL->Dpll[1].DPLLSTATUS.bit.CLKRDY == 0 || OSCCTRL->Dpll[1].DPLLSTATUS.bit.LOCK == 0 );
+  //  while( OSCCTRL->Dpll[1].DPLLSTATUS.bit.CLKRDY == 0 || OSCCTRL->Dpll[1].DPLLSTATUS.bit.LOCK == 0 );
   
   
   /* ------------------------------------------------------------------------
@@ -230,21 +230,21 @@ void SystemInit( void )
    * Set up main clock
    */
   
-  GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_MAIN].reg = GCLK_GENCTRL_SRC(MAIN_CLOCK_SOURCE) |
-    GCLK_GENCTRL_IDC |
-    //GCLK_GENCTRL_OE |
-    GCLK_GENCTRL_GENEN;
+  // GCLK->GENCTRL[GENERIC_CLOCK_GENERATOR_MAIN].reg = GCLK_GENCTRL_SRC(MAIN_CLOCK_SOURCE) |
+  //   GCLK_GENCTRL_IDC |
+  //   //GCLK_GENCTRL_OE |
+  //   GCLK_GENCTRL_GENEN;
   
 
-  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL0 )
-    {
-      /* Wait for synchronization */
-    }
+  //  while ( GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL0 )
+  //    {
+  //      /* Wait for synchronization */
+  //    }
   
-  MCLK->CPUDIV.reg = MCLK_CPUDIV_DIV_DIV1;
+  //  MCLK->CPUDIV.reg = MCLK_CPUDIV_DIV_DIV1;
   
   /* Use the LDO regulator by default */
-  SUPC->VREG.bit.SEL = 0; 
+  //  SUPC->VREG.bit.SEL = 0; 
   
   
   /* If desired, enable cache! */

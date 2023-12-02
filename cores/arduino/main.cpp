@@ -60,7 +60,7 @@ extern "C" void __libc_init_array(void);
  */
 int main(void)
 {
-  init();
+  init(); __enable_irq();
 
   __libc_init_array();
 
