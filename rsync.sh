@@ -1,0 +1,5 @@
+scp /mnt/c/Users/pyszk/projekty/sd_bootloader_wio_heating/wio_terminal_sd_bootloader/.pio/build/wio_sd_bootloader/firmware.elf pawelpyszko@192.168.1.138:~/bootloader_huawei.elf
+rsync -av --progress /mnt/c/Users/pyszk/.platformio/packages/framework-arduino-samd-seeed/ pawelpyszko@192.168.1.138:~/projects/wio_dependency_vscode/huawei_bootloader/ --exclude /mnt/c/Users/pyszk/.platformio/packages/framework-arduino-samd-seeed/.git
+rsync -av --progress /mnt/c/Users/pyszk/projekty/sd_bootloader_wio_heating/wio_terminal_sd_bootloader/ pawelpyszko@192.168.1.138:~/projects/wio_dependency_vscode/huawei_bootloader_src/ --exclude /mnt/c/Users/pyszk/projekty/sd_bootloader_wio_heating/wio_terminal_sd_bootloader/.git --exclude /mnt/c/Users/pyszk/projekty/sd_bootloader_wio_heating/wio_terminal_sd_bootloader/.pio/build/
+# local sync to see git diff:
+rsync -av --progress /mnt/c/Users/pyszk/.platformio/packages/framework-arduino-samd-seeed/ /home/cooler1989/project/wio_atsamd_dbg_init_clocks/ --exclude=.git
